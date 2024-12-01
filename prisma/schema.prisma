@@ -27,19 +27,13 @@ model User{
   updatedAt   DateTime @updatedAt
 }
 
-model Video{
-  id    String     @id @default(uuid())
-  uploader    User     @relation(fields: [uploaderId], references: [id])
-  uploaderId  String   // Foreign key to the User model
-  title       String
-  description String?
-  url         String   @unique
-  thumbnail   String?
-  duration    Int      // Duration in seconds
-  views       Int      @default(0)
-  likes       Int      @default(0)
-  dislikes    Int      @default(0)
-  isPublished Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Video {
+  id           String   @id @default(uuid())
+  title        String
+  thumbnailUrl String
+  viewCount    Int
+  createdAt    DateTime @default(now())
+  creatorId    String
+  creator      User     @relation(fields: [creatorId], references: [id])
+  category     String?
 }
