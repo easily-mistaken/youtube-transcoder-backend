@@ -7,12 +7,15 @@ export const getVideoFeed = async (req: Request, res: Response) => {
     // Validate query parameters
     const queryParams = videoFeedQuerySchema.parse(req.query);
     const { page, limit, category } = queryParams;
+
     // Prepare the filtering and pagination logic
     const skip = (page - 1) * limit;
     const whereFilter = category ? { category } : {};
+
     const totalVideos = await prisma.video.count({
       where: whereFilter,
     });
+
     const videos = await prisma.video.findMany({
       where: whereFilter,
       skip,
@@ -29,9 +32,12 @@ export const getVideoFeed = async (req: Request, res: Response) => {
         createdAt: "desc",
       },
     });
+
     // Response structure
     let totalPages = Math.ceil(totalVideos / limit);
+
     totalPages = totalPages === 0 ? 1 : totalPages;
+
     res.status(200).json({
       videos: videos.map((video) => ({
         id: video.id,

@@ -1,4 +1,5 @@
 import z from "zod";
+
 // Video Feed Query Schema (Validation with Zod)
 export const videoFeedQuerySchema = z.object({
   page: z.number().min(1).default(1),
