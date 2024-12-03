@@ -8,6 +8,6 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/", appRouter);
+app.get("/api/", appRouter);
 
 app.listen(port, () => console.log("Server is listening on port: ", port));
