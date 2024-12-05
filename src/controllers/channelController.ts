@@ -3,6 +3,7 @@ import { channelCreateSchema } from "../schemas/channel";
 import prisma from "../db/prisma";
 import { ZodError } from "zod";
 import { CustomRequest } from "../middlewares/authenticate";
+
 export const createChannel = async (req: CustomRequest, res: Response) => {
   try {
     // Validate request body
@@ -51,9 +52,11 @@ export const createChannel = async (req: CustomRequest, res: Response) => {
     }
   }
 };
+
 export const getChannelDetails = async (req: Request, res: Response) => {
   try {
     const { slug } = req.params;
+
     // Fetch channel details and associated videos
     const channel = await prisma.channel.findUnique({
       where: { slug },
@@ -71,6 +74,7 @@ export const getChannelDetails = async (req: Request, res: Response) => {
       res.status(404).json({ message: "Channel not found" });
       return;
     }
+
     // Construct response
     const response = {
       id: channel.id,
