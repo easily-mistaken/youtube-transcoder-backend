@@ -190,16 +190,24 @@ export const getVideoDetails = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 // Update TimeStamp of a video
 export const updateTimestamp = async (req: Request, res: Response) => {
   try {
     const { videoId } = req.params;
-    const { timestamp } = req.body;
+    const timestamp = Number(req.body);
+
+    if (!timestamp) {
+      res.status(400).json({ message: "Timestamp Required" });
+      return;
+    }
+
     // Validate the timestamp value
     if (timestamp < 0) {
       res.status(400).json({ message: "Time cannot be negative" });
       return;
     }
+
     // Fetch the video details to check its duration
     const video = await prisma.video.findUnique({
       where: { id: videoId },
@@ -207,10 +215,12 @@ export const updateTimestamp = async (req: Request, res: Response) => {
         duration: true,
       },
     });
+
     if (!video) {
       res.status(404).json({ message: "Video not found" });
       return;
     }
+
     // Validate that the timestamp is not longer than the video duration
     if (video.duration && timestamp > video.duration) {
       res.status(400).json({
@@ -218,6 +228,7 @@ export const updateTimestamp = async (req: Request, res: Response) => {
       });
       return;
     }
+
     // Publish the updated Time to the pub sub
     await publishToRedis(videoId, timestamp);
     res.status(201).json({ message: "Timestamp updated" });

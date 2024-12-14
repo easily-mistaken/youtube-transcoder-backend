@@ -82,7 +82,7 @@ export const loginUser = async (req: Request, res: Response) => {
     const token = generateToken(user);
 
     // Set JWT Token as HTTPonly Cookie
-    res.cookie("Authentication", token, {
+    res.cookie("access-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Secure flag in production
       sameSite: "strict",
